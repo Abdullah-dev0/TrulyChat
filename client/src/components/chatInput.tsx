@@ -11,16 +11,14 @@ const ChatInput = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!inputValue.trim()) return;
-
+		const user = "user";
 		const newMessage: Message = {
 			id: uuidv4(),
 			content: inputValue.trim(),
-			sender: "user",
-			timestamp: format(new Date(), "yyyy-MM-dd HH:mm"),
+			sender: user ?? "Unknown",
+			timestamp: format(new Date(), "yyyy-MM-dd dd:mm"),
 		};
 
-		// Properly append new message to existing messages
 		setMessages((prevMessages) => {
 			if (!prevMessages) return [newMessage];
 			return [...prevMessages, newMessage];
@@ -32,7 +30,7 @@ const ChatInput = () => {
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="w-full flex py-2 gap-2 items-center max-w-screen-lg justify-between">
+			<div className="w-full flex py-2 gap-2 mb-2 items-center max-w-screen-lg justify-between">
 				<Input
 					className="py-4"
 					type="text"

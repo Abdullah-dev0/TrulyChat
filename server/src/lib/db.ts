@@ -7,6 +7,8 @@ export interface Message {
 	timestamp: string;
 }
 
+// todo need some changes
+
 export const saveMessage = async (message: Message) => {
 	const db = await prisma.message.create({
 		data: {
@@ -14,6 +16,7 @@ export const saveMessage = async (message: Message) => {
 			content: message.content,
 			sender: message.sender,
 			timestamp: message.timestamp,
+			userId: "user",
 		},
 	});
 };

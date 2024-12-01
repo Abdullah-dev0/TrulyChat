@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 import { Card, CardHeader } from "@/components/ui/card";
-import { SignInForm } from "../components/SignIn";
+import { SignInForm } from "../components/Signin";
 import { SignUpForm } from "../components/Signup";
 
 //change the name of the Application

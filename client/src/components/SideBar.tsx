@@ -8,7 +8,7 @@ interface SideBarProps {
 
 const SideBar = ({ friends }: SideBarProps) => {
 	return (
-		<div className=" hidden md:flex flex-col h-full text-gray-800 p-7 gap-5 overflow-y-auto overflow-hidden scrollbar-hide scroll-smooth ">
+		<div className=" hidden md:flex flex-col h-full text-gray-800 shadow-xl p-5 gap-5 overflow-y-auto overflow-hidden scrollbar-hide scroll-smooth ">
 			<div className="flex items-center justify-between p-3 border-b border-purple-700">
 				<h1 className="text-xl font-bold">TrulyChat</h1>
 				<div className="flex items-center gap-2">

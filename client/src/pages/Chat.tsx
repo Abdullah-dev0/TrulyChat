@@ -9,11 +9,9 @@ const Chat = () => {
 
 	useEffect(() => {
 		const messagesToDisplay = friends.find((friend) => friend.id === selectedFriendId)?.messages;
-
-		setMessages(messagesToDisplay!);
+		if (!messagesToDisplay) return;
+		setMessages(messagesToDisplay as Message[]);
 	}, [selectedFriendId]);
-
-	console.log("messages", messages);
 
 	return (
 		<div className="grid md:grid-cols-[350px_1fr] h-screen">
@@ -27,5 +25,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-//create a chatBox component

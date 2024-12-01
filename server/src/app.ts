@@ -3,8 +3,6 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "http";
 import "dotenv/config";
-
-// import { instrument } from "@socket.io/admin-ui";
 import authRoute from "./routes/auth.route";
 import { setupSocket } from "./socket";
 
@@ -41,4 +39,6 @@ app.get("/", (req, res) => {
 
 app.use(authRoute);
 
-export default server;
+server.listen(3000, () => {
+	console.log("Server is running on port 3000");
+});

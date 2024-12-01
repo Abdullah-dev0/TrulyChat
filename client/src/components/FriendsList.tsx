@@ -14,7 +14,7 @@ interface FriendsListProps {
 }
 
 export const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
-	const { setSelectedFriendId } = useChatContext();
+	const { setSelectedFriendId, selectedFriendId } = useChatContext();
 	return (
 		<div className="flex-1">
 			<div className="flex items-center justify-between px-3 py-2">
@@ -25,7 +25,9 @@ export const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
 				{friends.map((friend) => (
 					<div
 						key={friend.id}
-						className={`flex items-center hover:bg-gray-200 gap-3 p-3 cursor-pointer rounded-lg mx-1 `}
+						className={`flex items-center hover:bg-gray-200 gap-3 p-3 cursor-pointer rounded-lg mx-1 ${
+							selectedFriendId === friend.id ? "bg-gray-200" : ""
+						}`}
 						onClick={() => setSelectedFriendId(friend.id)}>
 						<div className="relative">
 							<div className="w-10 h-10  rounded-full flex items-center justify-center">
