@@ -1,30 +1,35 @@
-import { Message, useChatContext } from "@/context/chatContext";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
+import { useSocketContext } from "@/context/socketcontext";
+import { useUserSession } from "@/hooks/useUserSession";
+import { useConversation } from "@/store/useConversation";
 import { format } from "date-fns";
+import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 const ChatInput = () => {
-	const { setMessages, sendMessage } = useChatContext();
 	const [inputValue, setInputValue] = useState("");
+	const { sendMessage } = useSocketContext();
+	const { data: user } = useUserSession();
+	const messages = useConversation((state) => state.messages);
+	const setMessages = useConversation((state) => state.setMessages);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		const user = "user";
-		const newMessage: Message = {
+
+		const newMessage = {
 			id: uuidv4(),
 			content: inputValue.trim(),
-			sender: user ?? "Unknown",
-			timestamp: format(new Date(), "yyyy-MM-dd dd:mm"),
+			name: user?.name ?? "Unknown",
+			group_id: "1",
+			timestamp: format(new Date(), "yyyy-MM-dd HH:mm"),
 		};
 
-		setMessages((prevMessages) => {
-			if (!prevMessages) return [newMessage];
-			return [...prevMessages, newMessage];
-		});
+		// Update messages in store
+		setMessages([...messages, newMessage]);
 
 		sendMessage(newMessage);
+
+		// Clear input
 		setInputValue("");
 	};
 
@@ -32,13 +37,11 @@ const ChatInput = () => {
 		<form onSubmit={handleSubmit}>
 			<div className="w-full flex py-2 gap-2 mb-2 items-center max-w-screen-lg justify-between">
 				<Input
-					className="py-4"
-					type="text"
 					value={inputValue}
-					placeholder="Type your message here"
 					onChange={(e) => setInputValue(e.target.value)}
+					placeholder="Type a message..."
+					className="flex-1"
 				/>
-				<Button type="submit">Send Message</Button>
 			</div>
 		</form>
 	);

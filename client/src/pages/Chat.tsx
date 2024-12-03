@@ -1,24 +1,32 @@
-import ChatContainer from "@/components/ChatContainer";
-import SideBar from "@/components/SideBar";
+import ChatBox from "@/components/ChatBox";
+import ChatInput from "@/components/chatInput";
+import { SideBar } from "@/components/SideBar";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
-import { friends } from "@/constant";
-import { Message, useChatContext } from "@/context/chatContext";
+import { useConversation } from "@/store/useConversation";
 import { useEffect } from "react";
-const Chat = () => {
-	const { selectedFriendId, messages, setMessages } = useChatContext();
 
+const Chat = () => {
+	const messages = useConversation((state) => state.messages);
+	const selectedConversation = useConversation((state) => state.selectedConversation);
+	const setSelectedConversation = useConversation((state) => state.setSelectedConversation);
 	useEffect(() => {
-		const messagesToDisplay = friends.find((friend) => friend.id === selectedFriendId)?.messages;
-		if (!messagesToDisplay) return;
-		setMessages(messagesToDisplay as Message[]);
-	}, [selectedFriendId]);
+		return () => {
+			setSelectedConversation(null);
+		};
+	}, [setSelectedConversation]);
 
 	return (
 		<div className="grid md:grid-cols-[350px_1fr] h-screen">
-			<SideBar friends={friends} />
-			<main className=" flex flex-col h-screen">
-				{!selectedFriendId && <WelcomeScreen />}
-				{selectedFriendId && <ChatContainer messages={messages} />}
+			<SideBar />
+			<main className="flex flex-col h-screen">
+				{selectedConversation ? (
+					<section className="flex flex-col h-full gap-2 p-3">
+						<ChatBox messages={messages} />
+						<ChatInput />
+					</section>
+				) : (
+					<WelcomeScreen />
+				)}
 			</main>
 		</div>
 	);

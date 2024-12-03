@@ -5,8 +5,12 @@ import { createServer } from "http";
 import "dotenv/config";
 import authRoute from "./routes/auth.route";
 import { setupSocket } from "./socket";
+import morgan from "morgan";
+import userRoute from "./routes/user.route";
+import conversationRouter from "./routes/conversation.route";
 
 const app = express();
+app.use(morgan("dev"));
 
 const server = createServer(app);
 
@@ -38,6 +42,8 @@ app.get("/", (req, res) => {
 });
 
 app.use(authRoute);
+app.use("/api", userRoute);
+app.use("/api", conversationRouter);
 
 server.listen(3000, () => {
 	console.log("Server is running on port 3000");

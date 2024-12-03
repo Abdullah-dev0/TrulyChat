@@ -1,11 +1,11 @@
 import { Toaster } from "@/components/ui/sonner";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import ChatLayout from "./layout/chatLayout";
 import AuthPage from "./pages/AuthPage";
 import Chat from "./pages/Chat";
 import HomePage from "./pages/HomePage";
 import AuthProviders from "./providers/AuthProviders";
+import { SocketProvider } from "./context/socketcontext";
 
 const notAuthRoutes = [
 	{
@@ -27,13 +27,12 @@ const publicRoutes = [
 
 const authRoutes = [
 	{
-		element: <ChatLayout />,
-		children: [
-			{
-				path: "chat",
-				element: <Chat />,
-			},
-		],
+		path: "/chat",
+		element: (
+			<SocketProvider>
+				<Chat />
+			</SocketProvider>
+		),
 	},
 ];
 

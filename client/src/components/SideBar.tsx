@@ -1,24 +1,21 @@
-import { MessageSquarePlus } from "lucide-react";
+import { getConversations } from "@/lib/apis";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
 import { FriendsList } from "./FriendsList";
+import { SidebarHeader } from "./SidebarHeader";
 import { UserProfile } from "./UserProfile";
 
-interface SideBarProps {
-	friends: any;
-}
-
-const SideBar = ({ friends }: SideBarProps) => {
+export const SideBar = () => {
 	return (
 		<div className=" hidden md:flex flex-col h-full text-gray-800 shadow-xl p-5 gap-5 overflow-y-auto overflow-hidden scrollbar-hide scroll-smooth ">
 			<div className="flex items-center justify-between p-3 border-b border-purple-700">
 				<h1 className="text-xl font-bold">TrulyChat</h1>
-				<div className="flex items-center gap-2">
-					<MessageSquarePlus className="w-6 h-6" />
-				</div>
+				<SidebarHeader />
 			</div>
-			<FriendsList friends={friends} />
+			<Suspense fallback={<div>The Data Is been Fetched</div>}>
+				<FriendsList />
+			</Suspense>
 			<UserProfile username="John Doe" status="Online" />
 		</div>
 	);
 };
-
-export default SideBar;

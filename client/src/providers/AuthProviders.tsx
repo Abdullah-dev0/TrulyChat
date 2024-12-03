@@ -1,20 +1,10 @@
-import { authClient } from "@/lib/auth-client";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useUserSession } from "@/hooks/useUserSession";
 import { Loader2 } from "lucide-react";
 import { Navigate, Outlet } from "react-router";
 import { toast } from "sonner";
 
 const AuthProviders = () => {
-	const { data, error, isLoading, isFetching } = useQuery({
-		queryKey: ["session"],
-		queryFn: () => authClient.getSession(),
-		staleTime: (query) => {
-			if (query.state.data?.data?.user) {
-				return Infinity; // Return stale time if data exists
-			}
-			return 0; // Return 0 if data is not available
-		},
-	});
+	const { data, error, isLoading, isFetching } = useUserSession();
 
 	if (isLoading || isFetching) {
 		return (
@@ -25,11 +15,14 @@ const AuthProviders = () => {
 	}
 
 	if (error) {
-		toast.error("Authentication failed");
-		return;
+		console.log("error", error);
+		toast.error("Please login", {
+			duration: 5000,
+		});
+		return <Navigate to="/Authpage" replace />;
 	}
 
-	if (!data?.data) {
+	if (!data) {
 		return <Navigate to="/Authpage" replace />;
 	}
 

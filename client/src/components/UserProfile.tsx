@@ -14,6 +14,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username = "Guest User
 	const [isLoading, setIsLoading] = React.useState(false);
 	const navigate = useNavigate();
 	const query = useQueryClient();
+	const user = query.getQueryData(["session"]) as any;
 
 	const handleSubmit = async () => {
 		await authClient.signOut({
@@ -42,7 +43,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ username = "Guest User
 			<div className=" gap-4 rounded-full flex items-center justify-center">
 				<User className="w-6 h-6 " />
 				<div>
-					<h3 className=" font-medium">{username}</h3>
+					<h3 className=" font-medium">{user.name}</h3>
 					<p className=" text-sm">{status}</p>
 				</div>
 			</div>

@@ -1,17 +1,13 @@
-import { QueryFunction, QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { QueryFunction, QueryKey, useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 
-interface UseQueryProps<TQueryFnData = unknown, TError = unknown, TData = TQueryFnData> {
-	queryKey: QueryKey;
-	queryFn: QueryFunction<TQueryFnData>;
-	options?: Omit<UseQueryOptions<TQueryFnData, TError, TData>, "queryKey" | "queryFn">;
-}
-
-const useCustmQuery = ({ queryKey, queryFn, options }: UseQueryProps) => {
+export default function useCustomQuery<TData = unknown, TError = unknown>(
+	queryKey: QueryKey,
+	queryFn: QueryFunction<TData>,
+	options?: Omit<UseQueryOptions<TData, TError>, "queryKey" | "queryFn">,
+): UseQueryResult<TData, TError> {
 	return useQuery({
-		queryKey: queryKey,
-		queryFn: queryFn,
-		...options, // Pass the options from the hook parameters
+		queryKey,
+		queryFn,
+		...options,
 	});
-};
-
-export default useCustmQuery;
+}

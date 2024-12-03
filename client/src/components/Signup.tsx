@@ -39,7 +39,7 @@ export function SignUpForm() {
 				},
 				onSuccess: () => {
 					setIsLoading(false);
-					navigate("/");
+					navigate("/chat");
 					toast.success("Sign up successful!");
 				},
 				onError: (ctx) => {

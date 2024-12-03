@@ -1,52 +1,39 @@
-import React from "react";
-import { User, Volume2, VolumeX } from "lucide-react";
-import { useChatContext } from "@/context/chatContext";
+import { getConversations } from "@/lib/apis";
+import { useConversation } from "@/store/useConversation";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-interface Friend {
-	id: string;
-	username: string;
-	status: "online" | "offline";
-	isMuted?: boolean;
-}
+export const FriendsList = () => {
+	const { selectedConversation, setSelectedConversation } = useConversation();
 
-interface FriendsListProps {
-	friends: Friend[];
-}
+	const { data: friends } = useSuspenseQuery({ queryKey: ["getFriends"], queryFn: getConversations });
 
-export const FriendsList: React.FC<FriendsListProps> = ({ friends }) => {
-	const { setSelectedFriendId, selectedFriendId } = useChatContext();
 	return (
-		<div className="flex-1">
+		<>
 			<div className="flex items-center justify-between px-3 py-2">
-				<h2 className=" font-medium">CHAT MESSAGES</h2>
-				<span className=" text-sm">{friends.length}</span>
+				<h2 className="font-medium">CHAT MESSAGES</h2>
+				<span className="text-sm">{friends.length}</span>
 			</div>
-			<div className="space-y-1 ">
-				{friends.map((friend) => (
-					<div
-						key={friend.id}
-						className={`flex items-center hover:bg-gray-200 gap-3 p-3 cursor-pointer rounded-lg mx-1 ${
-							selectedFriendId === friend.id ? "bg-gray-200" : ""
-						}`}
-						onClick={() => setSelectedFriendId(friend.id)}>
-						<div className="relative">
-							<div className="w-10 h-10  rounded-full flex items-center justify-center">
-								<User className="w-5 h-5 " />
+			<div className="space-y-1">
+				{friends.length === 0 ? (
+					<div className="p-3 text-red-500">No friends found</div>
+				) : (
+					friends.map((user) => (
+						<div
+							key={user.id}
+							onClick={() => setSelectedConversation(user)}
+							className={`flex items-center hover:bg-gray-200 gap-3 p-3 cursor-pointer rounded-lg mx-1
+        ${selectedConversation?.id === user.id ? "bg-gray-200" : ""}`}>
+							<div className="relative">
+								<img src={user.image || "/default-avatar.png"} alt={user.name} className="w-10 h-10 rounded-full" />
 							</div>
-							<div
-								className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 ${
-									friend.status === "online" ? "bg-green-500" : "bg-gray-400"
-								}`}
-							/>
+							<div className="flex-1 min-w-0">
+								<h3 className="font-medium truncate">{user.name}</h3>
+								<p className="text-sm text-gray-500 truncate">{user.email}</p>
+							</div>
 						</div>
-						<div className="flex-1 min-w-0">
-							<h3 className=" font-medium truncate">{friend.username}</h3>
-							<p className=" text-sm capitalize">{friend.status}</p>
-						</div>
-						{friend.isMuted ? <VolumeX className="w-5 h-5 " /> : <Volume2 className="w-5 h-5 " />}
-					</div>
-				))}
+					))
+				)}
 			</div>
-		</div>
+		</>
 	);
 };
