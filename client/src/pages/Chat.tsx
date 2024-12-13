@@ -6,9 +6,10 @@ import { useConversation } from "@/store/useConversation";
 import { useEffect } from "react";
 
 const Chat = () => {
-	const messages = useConversation((state) => state.messages);
 	const selectedConversation = useConversation((state) => state.selectedConversation);
 	const setSelectedConversation = useConversation((state) => state.setSelectedConversation);
+
+	
 	useEffect(() => {
 		return () => {
 			setSelectedConversation(null);
@@ -21,7 +22,7 @@ const Chat = () => {
 			<main className="flex flex-col h-screen">
 				{selectedConversation ? (
 					<section className="flex flex-col h-full gap-2 p-3">
-						<ChatBox messages={messages} />
+						<ChatBox />
 						<ChatInput />
 					</section>
 				) : (

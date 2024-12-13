@@ -5,7 +5,11 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 export const FriendsList = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
-	const { data: friends } = useSuspenseQuery({ queryKey: ["getFriends"], queryFn: getConversations });
+	const { data: friends } = useSuspenseQuery({
+		queryKey: ["getFriends"],
+		queryFn: getConversations,
+		staleTime: Infinity,
+	});
 
 	return (
 		<>

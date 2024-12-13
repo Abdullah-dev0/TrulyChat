@@ -1,7 +1,7 @@
-import { useUserSession } from "@/hooks/useUserSession";
 import { getSocket } from "@/lib/socketClient";
-import React, { createContext, useContext, useEffect, useMemo } from "react";
+import { useConversation } from "@/store/useConversation";
 import { useQueryClient } from "@tanstack/react-query";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
 
 export interface Message {
 	id: string;
@@ -18,16 +18,14 @@ interface ChatContextType {
 const SocketContext = createContext<ChatContextType | null>(null);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+	const setMessage = useConversation((state) => state.setMessages);
 	const query = useQueryClient();
+	const messages = useConversation((state) => state.messages);
 
 	const user = query.getQueryData(["session"]) as any;
 
 	let socket = useMemo(() => {
-		const socket = getSocket();
-
-		socket.auth = {
-			room: user?.id,
-		};
+		const socket = getSocket(user.id);
 
 		return socket.connect();
 	}, [user]);
@@ -41,8 +39,9 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 			console.log("Socket disconnected:", reason);
 		});
 
-		socket.on("message", (message: Message) => {
+		socket.on("message", (message: any) => {
 			console.log("Received message:", message);
+			setMessage(message);
 		});
 
 		// Cleanup on unmount

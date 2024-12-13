@@ -1,31 +1,30 @@
 import { Server, Socket } from "socket.io";
 
-interface CustomSocket extends Socket {
-	room?: string;
-}
+const userSocketMap: { [key: string]: string } = {};
 export function setupSocket(io: Server) {
-	io.use((socket: CustomSocket, next) => {
-		const room = socket.handshake.auth.room || socket.handshake.headers.room;
-		console.log("Room:", room);
-		if (!room) {
-			return next(new Error("Invalid room"));
-		}
-		socket.room = room;
-		next();
-	});
-
-	io.on("connection", (socket: CustomSocket) => {
+	io.on("connection", (socket: Socket) => {
 		console.log("A user connected:", socket.id);
 
-		// * Join the room
-		socket.join(socket.room!);
+		const userId = socket.handshake.query.room as string;
 
-		console.log("Room:", socket.room);
+		console.log("socketId:", userId);
 
-		socket.on("message", async (data) => {
+		socket.on("message", async (data: any) => {
 			console.log("Received message:", data);
+			if (userId !== "undefined") userSocketMap[userId] = socket.id;
 
-			socket.to(socket.room!).emit("message", data);
+			console.log(userSocketMap);
+
+			const receverId = userSocketMap[data.recerverId];
+
+			console.log(receverId);
+
+			const sendMessage = {
+				...data,
+				name: "",
+			};
+
+			socket.to(receverId).emit("message", sendMessage);
 		});
 
 		socket.on("disconnect", () => {

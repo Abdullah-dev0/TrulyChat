@@ -12,6 +12,7 @@ const ChatInput = () => {
 	const { data: user } = useUserSession();
 	const messages = useConversation((state) => state.messages);
 	const setMessages = useConversation((state) => state.setMessages);
+	const recerverId = useConversation((state) => state.selectedConversation);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -20,12 +21,13 @@ const ChatInput = () => {
 			id: uuidv4(),
 			content: inputValue.trim(),
 			name: user?.name ?? "Unknown",
+			recerverId: recerverId?.id,
 			group_id: "1",
 			timestamp: format(new Date(), "yyyy-MM-dd HH:mm"),
 		};
 
 		// Update messages in store
-		setMessages([...messages, newMessage]);
+		setMessages(newMessage);
 
 		sendMessage(newMessage);
 

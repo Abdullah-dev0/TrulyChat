@@ -2,11 +2,9 @@ import { Message } from "@/context/socketcontext";
 import { useConversation } from "@/store/useConversation";
 import { useEffect, useRef } from "react";
 
-export default function ChatBox({ messages }: { messages: Message[] }) {
+export default function ChatBox() {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const selectedConversation = useConversation((state) => state.selectedConversation);
-
-	console.log("Chat Box", selectedConversation);
+	const messages = useConversation((state) => state.messages);
 
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
